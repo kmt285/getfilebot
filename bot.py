@@ -1,5 +1,5 @@
 import telebot
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardRemove
 import os
 import uuid
 import pymongo
@@ -33,7 +33,6 @@ def get_unjoined_channels(user_id):
             unjoined[chat_id] = link 
     return unjoined
 
-# ဖိုင်ပို့ပေးမည့် သီးသန့် Function
 def send_file_to_user(chat_id, file_code):
     file_data = files_collection.find_one({"file_code": file_code})
     
@@ -46,14 +45,17 @@ def send_file_to_user(chat_id, file_code):
         
         final_caption = f"{original_caption}{ads_text}" if original_caption else ads_text
         
+        remove_kb = ReplyKeyboardRemove()
+        
+        # ဖိုင်ပို့တဲ့အခါ reply_markup=remove_kb ကို တွဲထည့်ပေးလိုက်ပါ
         if file_type == 'document':
-            bot.send_document(chat_id, file_id, caption=final_caption, parse_mode="HTML")
+            bot.send_document(chat_id, file_id, caption=final_caption, parse_mode="HTML", reply_markup=remove_kb)
         elif file_type == 'video':
-            bot.send_video(chat_id, file_id, caption=final_caption, parse_mode="HTML")
+            bot.send_video(chat_id, file_id, caption=final_caption, parse_mode="HTML", reply_markup=remove_kb)
         elif file_type == 'photo':
-            bot.send_photo(chat_id, file_id, caption=final_caption, parse_mode="HTML")
+            bot.send_photo(chat_id, file_id, caption=final_caption, parse_mode="HTML", reply_markup=remove_kb)
     else:
-        bot.send_message(chat_id, "❌ ဖိုင်ရှာမတွေ့ပါ။ လင့်ခ်မှားယွင်းနေနိုင်ပါသည်။")
+        bot.send_message(chat_id, "❌ 404, File not Found! ")
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
