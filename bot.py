@@ -140,6 +140,28 @@ def handle_files(message):
     
     bot.reply_to(message, reply_text, parse_mode="HTML")
 
+# ဖိုင်များကို Database မှ ပြန်လည်ဖျက်ရန် Admin သီးသန့် Command
+@bot.message_handler(commands=['delete'])
+def delete_file_record(message):
+    # Admin ဟုတ်မဟုတ် စစ်ဆေးခြင်း
+    if message.from_user.id != ADMIN_ID:
+        return
+
+    args = message.text.split()
+    if len(args) > 1:
+        # လင့်ခ်နောက်က ကုဒ်တိုလေးကို ယူပါမည်
+        file_code = args[1] 
+        
+        # MongoDB ထဲမှ အဆိုပါ Code နှင့် ကိုက်ညီသော မှတ်တမ်းကို ဖျက်ပစ်ခြင်း
+        result = files_collection.delete_one({"file_code": file_code})
+        
+        if result.deleted_count > 0:
+            bot.reply_to(message, f"✅ ဖိုင်ကုဒ် <code>{file_code}</code> ကို Database ထဲမှ အောင်မြင်စွာ ဖျက်ပစ်လိုက်ပါပြီ။\n\nယခု ဖိုင်လင့်ခ်မှာ အလုပ်လုပ်တော့မည် မဟုတ်ပါ။", parse_mode="HTML")
+        else:
+            bot.reply_to(message, "❌ အဲ့ဒီ ဖိုင်ကုဒ်ကို Database ထဲမှာ ရှာမတွေ့ပါ။")
+    else:
+        bot.reply_to(message, "⚠️ အသုံးပြုနည်း မှားယွင်းနေပါသည်။\n\nပုံစံ: <code>/delete file_code</code>\nဥပမာ: /delete 1a2b3c4d", parse_mode="HTML")
+
 class DummyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
