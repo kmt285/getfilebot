@@ -3,6 +3,8 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 import os
 import uuid
 import pymongo
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 TOKEN = os.environ.get("BOT_TOKEN")
 ADMIN_ID = int(os.environ.get("ADMIN_ID"))
@@ -112,5 +114,20 @@ def handle_files(message):
     link = f"https://t.me/{BOT_USERNAME}?start={file_code}"
     bot.reply_to(message, f"✅ ဖိုင်ကို Database ထဲသို့ အောင်မြင်စွာ သိမ်းဆည်းပြီးပါပြီ။\n\n📌 မျှဝေရန် Link: {link}")
 
-print("Bot with MongoDB is running...")
+class DummyHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+        self.wfile.write(b"Bot is alive and running!")
+
+def run_dummy_server():
+    port = int(os.environ.get('PORT', 8080))
+    server = HTTPServer(('0.0.0.0', port), DummyHandler)
+    server.serve_forever()
+
+# Background thread ဖြင့် Port ဖွင့်ခြင်း
+threading.Thread(target=run_dummy_server, daemon=True).start()
+
+print("Bot with MongoDB and Dummy Port is running...")
 bot.polling(none_stop=True)
