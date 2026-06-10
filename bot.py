@@ -71,7 +71,7 @@ def handle_start(message):
             file_type = file_data['file_type']
             original_caption = file_data.get('original_caption', '') 
 
-            ads_text = "\n\n<b>Powered by:</b> <a href='https://kyawmintun.onrender.com'> Kyaw Min Tun</a>"
+            ads_text = "\n\n<b>Powered by:</b> <a href='https://t.me/+57dXzOlHgcQzYjZl'> Data House </a>"
             
             final_caption = f"{original_caption}{ads_text}" if original_caption else ads_text
             
@@ -81,8 +81,8 @@ def handle_start(message):
                 bot.send_video(message.chat.id, file_id, caption=final_caption, parse_mode="HTML")
             elif file_type == 'photo':
                 bot.send_photo(message.chat.id, file_id, caption=final_caption, parse_mode="HTML")
-        else:
-            bot.send_message(message.chat.id, "Hi there! 👋 \n\n Check Website - https://kyawmintun.onrender.com")
+            else:
+                bot.send_message(message.chat.id, "Hi there! 👋 \n\n Join Community - https://t.me/+57dXzOlHgcQzYjZl")
 
 @bot.message_handler(content_types=['document', 'video', 'photo'])
 def handle_files(message):
