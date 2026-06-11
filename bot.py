@@ -88,7 +88,7 @@ def handle_start(message):
         
     else:
         # 🔴 ပြင်ဆင်ချက် - /start အလွတ်ရိုက်လျှင် ပြမည့်စာ (Indent နေရာမှန်ပြင်ထားသည်)
-        bot.send_message(message.chat.id, "Hi there! 👋 \n\n Join Community - https://t.me/+57dXzOlHgcQzYjZl")
+        bot.send_message(message.chat.id, "Join Community - https://t.me/+57dXzOlHgcQzYjZl")
 
 # 🔴 ပြင်ဆင်ချက် - ✅ Join ပြီးပါပြီ Button ကို နှိပ်လျှင် အလုပ်လုပ်မည့် နေရာ (Callback Query)
 @bot.callback_query_handler(func=lambda call: call.data.startswith('check_'))
